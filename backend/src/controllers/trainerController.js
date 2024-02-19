@@ -15,12 +15,12 @@ const registerTrainer = async (req, res) => {
       email,
       contactNumber,
       skills,
-      address,
+      city,
       chargePerDay,
     } = req.body;
-
+ 
     const hashedPassword = await bcrypt.hash(password, 10);
-
+ 
     const newTrainer = new Trainer({
       username,
       password: hashedPassword,
@@ -28,10 +28,10 @@ const registerTrainer = async (req, res) => {
       email,
       contactNumber,
       skills,
-      address,
+      city,
       chargePerDay,
     });
-
+ 
     await newTrainer.save();
     res.status(201).json({ message: "Trainer registered successfully" });
   } catch (error) {
@@ -50,7 +50,7 @@ const getAllTrainers = async (req, res) => {
   }
 };
 
-// Find trainer by username endpoint
+// Find trainer by email endpoint
 const getTrainerByEmail = async (req, res) => {
   const { email } = req.params;
   // console.log(username)
@@ -60,7 +60,7 @@ const getTrainerByEmail = async (req, res) => {
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });
     }
-
+ 
     res.status(200).json(trainer);
   } catch (error) {
     console.error("Error finding trainer:", error);
@@ -68,17 +68,17 @@ const getTrainerByEmail = async (req, res) => {
   }
 };
 
-// Update trainer by username endpoint
+// Update trainer by email endpoint
 const updateTrainerByEmail = async (req, res) => {
   const { email: updatedEmail } = req.params; // Rename 'email' to 'updatedEmail'
-
+ 
   try {
     // Find the trainer by email
     let trainer = await Trainer.findOne({ email: updatedEmail });
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });
     }
-
+ 
     // Update trainer fields
     const {
       password,
@@ -93,9 +93,9 @@ const updateTrainerByEmail = async (req, res) => {
       deliveryMode,
       clients,
       Resume,
-      linkedInUrl,
+      linkedInUrl
     } = req.body;
-
+ 
     if (password) {
       trainer.password = password;
     }
@@ -135,10 +135,10 @@ const updateTrainerByEmail = async (req, res) => {
     if (linkedInUrl) {
       trainer.linkedInUrl = linkedInUrl;
     }
-
+ 
     // Save the updated trainer
     trainer = await trainer.save();
-
+ 
     res.status(200).json({ message: "Trainer updated successfully", trainer });
   } catch (error) {
     console.error("Error updating trainer:", error);
@@ -147,17 +147,17 @@ const updateTrainerByEmail = async (req, res) => {
 };
 
 //get all the details of PO for a particular trainer id
-const getPoByEmail = async (req, res) => {
+const  getPoByEmail = async(req,res) =>{
   const { email } = req.params;
-
+ 
   try {
     const purchaseOrders = await PurchaseOrder.find({ trainerEmail: email });
     res.json(purchaseOrders);
   } catch (error) {
-    console.error("Error fetching purchase orders:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error fetching purchase orders:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-};
+}
 
 // fetched trainer accepted tarinings i.e feching my training for particular trainer
 const getAcceptedPoByEmail = async (req, res) => {
