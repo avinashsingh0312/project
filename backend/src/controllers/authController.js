@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { secretKey } = require("../config/config");
-const Trainer = require("../models/Trainer");
-const Company = require("../models/Company");
+const { secretKey } = require("../config/auth");
+const Trainer = require("../models/trainerModel");
+const Company = require("../models/companyModel");
 
 const login = async (req, res) => {
   const { email, password } = req.body;

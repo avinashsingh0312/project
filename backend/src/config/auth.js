@@ -34,4 +34,5 @@ const authorizeRole = (roles) => (req, res, next) => {
 module.exports = {
   authenticateJWT,
   authorizeRole,
+  secretKey: "mysecretkey",
 };
