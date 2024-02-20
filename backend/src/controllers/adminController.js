@@ -92,11 +92,26 @@ const deleteCompany = async (req, res) => {
 
 const getBusinessRequests = async (req, res) => {
   try {
-    const businessRequests = await BusinessRequest.find();
-    res.status(200).json(businessRequests);
+    const data = await BusinessRequest.aggregate([
+      {
+        $lookup: {
+          from: "purchaseorders", // Collection name of purchase order
+          localField: "_id",
+          foreignField: "businessRequestId",
+          as: "purchaseOrders",
+        },
+      },
+      {
+        $match: {
+          purchaseOrders: { $size: 0 }, // Filter out business requests without linked purchase orders
+        },
+      },
+    ]);
+ 
+    res.json(data);
   } catch (error) {
-    console.error("Error fetching business requests:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
