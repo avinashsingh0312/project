@@ -1,5 +1,6 @@
+//auth.js
 // config/auth.js
-
+const secretKey = "mysecretkey";
 const jwt = require("jsonwebtoken");
 
 // JWT Authentication
@@ -34,5 +35,5 @@ const authorizeRole = (roles) => (req, res, next) => {
 module.exports = {
   authenticateJWT,
   authorizeRole,
-  secretKey: "mysecretkey",
+  secretKey,
 };

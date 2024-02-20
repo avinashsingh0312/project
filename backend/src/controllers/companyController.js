@@ -106,27 +106,60 @@ exports.checkEmailExistence = async (req, res) => {
   }
 };
 
+// exports.submitBusinessRequest = async (req, res) => {
+//   try {
+//     const { user } = req;
+//     const companyDocument = await Company.findById(user._id);
+//     const companyUniqueId = companyDocument._id;
+//     if (!companyUniqueId) {
+//       return res.status(400).json({ error: "Company uniqueId is required." });
+//     }
+//     const newBusinessRequest = await BusinessRequest.create({
+//       ...req.body,
+//       uniqueId: companyUniqueId,
+//     });
+//     console.log(
+//       "Business Request Data inserted successfully:",
+//       newBusinessRequest
+//     );
+//     return res
+//       .status(200)
+//       .json({ message: "Business Request Data submitted successfully" });
+//   } catch (error) {
+//     console.error("Error inserting data into MongoDB:", error);
+//     return res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
 exports.submitBusinessRequest = async (req, res) => {
   try {
-    const { user } = req;
-    const companyDocument = await Company.findById(user.id);
+    console.log(req);
+    // Extract the company's uniqueId from the authenticated user
+    const companyDocument = await Company.findById(req.user.id);
     const companyUniqueId = companyDocument._id;
+
+    // Ensure that the authenticated user is a company and has a uniqueId
     if (!companyUniqueId) {
       return res.status(400).json({ error: "Company uniqueId is required." });
     }
+
+    // Create a new business request with the company's uniqueId
     const newBusinessRequest = await BusinessRequest.create({
       ...req.body,
       uniqueId: companyUniqueId,
     });
+
     console.log(
       "Business Request Data inserted successfully:",
       newBusinessRequest
     );
+
     return res
       .status(200)
       .json({ message: "Business Request Data submitted successfully" });
   } catch (error) {
     console.error("Error inserting data into MongoDB:", error);
+    console.log(req.uniqueId);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

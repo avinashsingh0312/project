@@ -1,8 +1,6 @@
-// models/trainerModel.js
-
+const express = require("express");
 const mongoose = require("mongoose");
 
-// Business Request schema
 const businessRequestSchema = new mongoose.Schema({
   uniqueId: {
     type: mongoose.Schema.Types.ObjectId,

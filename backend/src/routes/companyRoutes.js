@@ -12,6 +12,7 @@ const {
   getCurrentInvoices,
   submitFeedback,
 } = require("../controllers/companyController");
+const { authenticateJWT, authorizeRole } = require("../config/auth");
 
 // Company registration endpoint
 router.post("/companies", registerCompany);
@@ -29,7 +30,7 @@ router.delete("/companies/:email", deleteCompany);
 router.get("/check-email", checkEmailExistence);
 
 // Business request endpoint
-router.post("/businessrequest", submitBusinessRequest);
+router.post("/businessrequest", authenticateJWT, submitBusinessRequest);
 
 // Get business invoices endpoint
 router.get("/businessinvoices/:businessEmail", getBusinessInvoices);
