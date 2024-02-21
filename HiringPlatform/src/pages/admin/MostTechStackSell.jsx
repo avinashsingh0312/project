@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
-//import Chart from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 function MostTechStackSell() {
   const [technologyData, setTechnologyData] = useState([]);
