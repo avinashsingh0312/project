@@ -90,6 +90,32 @@ const deleteCompany = async (req, res) => {
   }
 };
 
+// const getBusinessRequests = async (req, res) => {
+//   try {
+//     const data = await BusinessRequest.aggregate([
+//       {
+//         $lookup: {
+//           from: "purchaseorders", // Collection name of purchase order
+//           localField: "_id",
+//           foreignField: "businessRequestId",
+//           as: "purchaseOrders",
+//         },
+//       },
+//       {
+//         $match: {
+//           purchaseOrders: { $size: 0 }, // Filter out business requests without linked purchase orders
+//         },
+//       },
+//     ]);
+ 
+//     res.json(data);
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+
 const getBusinessRequests = async (req, res) => {
   try {
     const data = await BusinessRequest.aggregate([
@@ -104,6 +130,19 @@ const getBusinessRequests = async (req, res) => {
       {
         $match: {
           purchaseOrders: { $size: 0 }, // Filter out business requests without linked purchase orders
+        },
+      },
+      {
+        $lookup: {
+          from: "companies", // Collection name of company
+          localField: "uniqueId",
+          foreignField: "_id",
+          as: "company",
+        },
+      },
+      {
+        $addFields: {
+          company: { $arrayElemAt: ["$company.companyName", 0] },
         },
       },
     ]);

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import MostTechStackSell from "./MostTechStackSell";
@@ -13,10 +12,14 @@ function RevenueAnalysisPage() {
 
   const fetchQuarterlyRevenue = async () => {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         "http://localhost:3001/adminbusinessrequestsGraph"
       );
-      setQuarterlyRevenue(response.data);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setQuarterlyRevenue(data);
     } catch (error) {
       console.error("Error fetching quarterly revenue:", error);
     }

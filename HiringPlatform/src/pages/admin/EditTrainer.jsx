@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 
 function EditTrainer() {
@@ -13,9 +12,13 @@ function EditTrainer() {
 
   const fetchTrainerDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/admintrainers/${id}`);
-      setTrainer(response.data);
-      setFormData(response.data);
+      const response = await fetch(`http://localhost:3001/admintrainers/${id}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setTrainer(data);
+      setFormData(data);
     } catch (error) {
       console.error("Error fetching trainer details:", error);
     }
@@ -28,7 +31,19 @@ function EditTrainer() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3001/admintrainers/${id}`, formData);
+      const response = await fetch(
+        `http://localhost:3001/admintrainers/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
       // Redirect or show a success message
     } catch (error) {
       console.error("Error updating trainer:", error);

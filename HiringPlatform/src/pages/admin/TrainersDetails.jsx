@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import EditTrainerModal from "./EditTrainerModal"; // Import the modal component
 
 function TrainersDetails() {
@@ -13,8 +12,12 @@ function TrainersDetails() {
 
   const fetchTrainers = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/admintrainers");
-      setTrainers(response.data);
+      const response = await fetch("http://localhost:3001/admintrainers");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setTrainers(data);
     } catch (error) {
       console.error("Error fetching trainers:", error);
     }
@@ -22,7 +25,9 @@ function TrainersDetails() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/admintrainers/${id}`);
+      await fetch(`http://localhost:3001/admintrainers/${id}`, {
+        method: "DELETE",
+      });
       setTrainers(trainers.filter((trainer) => trainer._id !== id));
       console.log("Trainer deleted successfully:", id);
     } catch (error) {

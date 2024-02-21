@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function TrainersFilterPage() {
   const [filterSkills, setFilterSkills] = useState("");
@@ -8,8 +7,12 @@ function TrainersFilterPage() {
 
   const handleFilter = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/admintrainers");
-      let filteredData = response.data;
+      const response = await fetch("http://localhost:3001/admintrainers");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      let filteredData = data;
 
       // Filter by skills
       if (filterSkills) {

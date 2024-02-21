@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import EditCompanyModal from "./EditCompanyModal"; // Import the modal component
+import EditCompanyModal from "./EditCompanyModal";
 
 function CompaniesDetails() {
   const [companies, setCompanies] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal open/close
-  const [selectedCompanyId, setSelectedCompanyId] = useState(null); // State to track selected company for editing
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCompanyId, setSelectedCompanyId] = useState(null);
 
   useEffect(() => {
     fetchCompanies();
@@ -13,29 +12,38 @@ function CompaniesDetails() {
 
   const fetchCompanies = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/admincompanies");
-      setCompanies(response.data);
+      const response = await fetch("http://localhost:3001/admincompanies");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setCompanies(data);
     } catch (error) {
       console.error("Error fetching companies:", error);
     }
   };
 
   const handleEdit = (companyId) => {
-    // Open modal for editing
     setIsModalOpen(true);
     setSelectedCompanyId(companyId);
   };
 
   const closeModal = () => {
-    // Close modal
     setIsModalOpen(false);
     setSelectedCompanyId(null);
   };
 
   const handleDelete = async (companyId) => {
     try {
-      await axios.delete(`http://localhost:3001/admincompanies/${companyId}`);
-      // After successful deletion, fetch updated companies
+      const response = await fetch(
+        `http://localhost:3001/admincompanies/${companyId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
       fetchCompanies();
       console.log("Company deleted successfully");
     } catch (error) {

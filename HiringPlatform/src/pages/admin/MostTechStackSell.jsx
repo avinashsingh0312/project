@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Pie } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
@@ -12,13 +11,16 @@ function MostTechStackSell() {
 
   const fetchTechnologyData = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/adminTechnologySell");
-      setTechnologyData(response.data);
+      const response = await fetch("http://localhost:3001/adminTechnologySell");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setTechnologyData(data);
     } catch (error) {
       console.error("Error fetching technology data:", error);
     }
   };
-
   return (
     <div className="bg-gray-100 min-h-screen py-8">
       <div className="container mx-auto px-4">

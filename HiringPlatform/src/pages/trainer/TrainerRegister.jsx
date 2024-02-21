@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
 import Navbar from "../../components/Navbar";
+//import TrainerRegisterForm from "../../test/TrainerRegisterForm";
  
 const TrainerRegister = () => {
   const [formData, setFormData] = useState({
@@ -19,15 +20,43 @@ const TrainerRegister = () => {
  
   const navigate = useNavigate();
  
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     const validationErrors = validateForm(formData);
+  //     if (Object.keys(validationErrors).length === 0) {
+  //       await axios.post("http://localhost:3001/trainers", formData);
+  //       alert("Registered Successfully!!!");
+  //       console.log("Trainer registered successfully");
+  //       navigate("/sign-in"); // Adjust the route as necessary
+  //     } else {
+  //       setErrors(validationErrors);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error registering trainer:", error);
+  //   }
+  // };
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const validationErrors = validateForm(formData);
       if (Object.keys(validationErrors).length === 0) {
-        await axios.post("http://localhost:3001/trainers", formData);
-        alert("Registered Successfully!!!");
-        console.log("Trainer registered successfully");
-        navigate("/sign-in"); // Adjust the route as necessary
+        const response = await fetch("http://localhost:3001/trainers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+ 
+        if (response.ok) {
+          alert("Registered Successfully!!!");
+          console.log("Trainer registered successfully");
+          navigate("/sign-in"); // Adjust the route as necessary
+        } else {
+          throw new Error("Failed to register trainer");
+        }
       } else {
         setErrors(validationErrors);
       }
@@ -35,7 +64,7 @@ const TrainerRegister = () => {
       console.error("Error registering trainer:", error);
     }
   };
- 
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });

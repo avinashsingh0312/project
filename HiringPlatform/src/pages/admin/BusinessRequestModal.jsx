@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 function BusinessRequestModal({ isOpen, onClose, request }) {
   const [email, setEmail] = useState("");
@@ -25,19 +24,30 @@ function BusinessRequestModal({ isOpen, onClose, request }) {
   // Function to handle form submission
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "http://localhost:3001/adminpurchase-orders",
         {
-          businessRequestId: request._id,
-          trainerEmail: email,
-          amount: calculatedBudget, // Include the calculatedBudget entered by the user
-          status: false,
-          startDate: request.startDate,
-          endDate: request.endDate,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            businessRequestId: request._id,
+            trainerEmail: email,
+            amount: calculatedBudget,
+            status: false,
+            startDate: request.startDate,
+            endDate: request.endDate,
+          }),
         }
       );
 
-      console.log("Purchase order created:", response.data);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      console.log("Purchase order created:", responseData);
       onClose();
     } catch (error) {
       console.error("Error creating purchase order:", error);

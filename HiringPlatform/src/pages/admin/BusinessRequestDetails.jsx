@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import BusinessRequestModal from "./BusinessRequestModal";
 import TrainersFilterPage from "./TrainersFilterPage";
@@ -9,14 +9,9 @@ function calculatePricePerDay(request) {
   const endDate = new Date(request.endDate);
   const durationInMilliseconds = endDate - startDate;
   const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-  const durationOfTraining = request.durationOfTraining;
   const trainingBudget = request.trainingBudget;
 
-  if (durationOfTraining <= 0) {
-    return "Invalid duration";
-  }
-
-  const pricePerDay = trainingBudget / (durationInDays * durationOfTraining);
+  const pricePerDay = trainingBudget / durationInDays;
   return isNaN(pricePerDay) ? "Invalid price" : pricePerDay.toFixed(2);
 }
 
@@ -34,11 +29,15 @@ function BusinessRequestsDetails() {
 
   const fetchBusinessRequests = async () => {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         "http://localhost:3001/adminbusinessrequests"
       );
-      console.log(response.data);
-      setBusinessRequests(response.data);
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      console.log(data);
+      setBusinessRequests(data);
     } catch (error) {
       console.error("Error fetching business requests:", error);
     }
@@ -55,10 +54,9 @@ function BusinessRequestsDetails() {
 
   const handleReject = async (businessId) => {
     try {
-      // Send a DELETE request to the backend to delete the record
-      await axios.delete(
-        `http://localhost:3001/adminbusinessrequests/${businessId}`
-      );
+      await fetch(`http://localhost:3001/adminbusinessrequests/${businessId}`, {
+        method: "DELETE",
+      });
 
       // If the deletion is successful, update the state to remove the deleted record
       setBusinessRequests((prevBusinessRequests) =>
@@ -108,11 +106,12 @@ function BusinessRequestsDetails() {
                   <td className="py-2 px-3">{request.endDate}</td>
                   <td className="py-2 px-3">{request.trainingBudget}</td>
                   <td className="py-2 px-3">{calculatePricePerDay(request)}</td>
-                  <td className="py-2 px-3">
+                  {/* <td className="py-2 px-3">
                     {typeof request.uniqueId === "object"
                       ? request.uniqueId.companyName
                       : request.uniqueId}
-                  </td>
+                  </td> */}
+                  <td className="py-2 px-3">{request.company}</td>
                   <td className="py-2 px-3">
                     <button
                       className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded mr-1"

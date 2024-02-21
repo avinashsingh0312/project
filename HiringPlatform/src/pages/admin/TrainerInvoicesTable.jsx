@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-//import EditTrainerModal from "./EditTrainerModal"; // Import the modal component
 
 const TrainerInvoicesTable = () => {
   const [trainerInvoices, setTrainerInvoices] = useState([]);
@@ -8,10 +6,14 @@ const TrainerInvoicesTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           "http://localhost:3001/admintrainerinvoices"
         );
-        setTrainerInvoices(response.data);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTrainerInvoices(data);
       } catch (err) {
         console.error(err);
       }
@@ -21,16 +23,22 @@ const TrainerInvoicesTable = () => {
 
   const generateInvoice = async (invoice) => {
     try {
-      await axios.post("http://localhost:3001/adminbusinessinvoices", {
-        invoiceId: invoice._id,
-        poId: invoice.poId,
-        businessId: invoice.businessId,
-        totalAmount: invoice.amount,
-        batches: "Some batches", // You can modify this as needed
-        startDate: invoice.startDate,
-        endDate: invoice.endDate,
-        technologies: "Some technologies", // You can modify this as needed
-        paymentStatus: false,
+      await fetch("http://localhost:3001/adminbusinessinvoices", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          invoiceId: invoice._id,
+          poId: invoice.poId,
+          businessId: invoice.businessId,
+          totalAmount: invoice.amount,
+          batches: "Some batches", // You can modify this as needed
+          startDate: invoice.startDate,
+          endDate: invoice.endDate,
+          technologies: "Some technologies", // You can modify this as needed
+          paymentStatus: false,
+        }),
       });
       alert("Invoice generated successfully!");
     } catch (err) {

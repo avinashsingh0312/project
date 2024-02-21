@@ -143,35 +143,6 @@ const [filter, setFilter] = useState('all'); // 'all', 'current', 'past'
     </Document>
   );
  
-  // const handleDownloadInvoice = async (invoiceId) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3001/invoices/${invoiceId}/download`);
-  //     if (!response.ok) {
-  //       throw new Error('Failed to download invoice');
-  //     }
-  //     const invoiceData = await response.json();
- 
-  //     // Render PDF
-  //     const pdfContent = <Invoice invoiceData={invoiceData} />;
-  //     const blob = await pdf(pdfContent).toBlob();
- 
-  //     // Create URL for the blob
-  //     const url = URL.createObjectURL(blob);
- 
-  //     // Create a link element and trigger the download
-  //     const a = document.createElement('a');
-  //     a.href = url;
-  //     a.download = 'invoice.pdf';
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
- 
-  //     // Clean up URL object
-  //     URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.error('Error downloading invoice:', error);
-  //   }
-  // };
  
   const handleDownloadInvoice = async (invoiceId) => {
     try {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 
@@ -10,31 +10,73 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     const response = await axios.post("http://localhost:3001/login", {
+  //       email,
+  //       password,
+  //     });
+
+  //     const { role, token, } = response.data; // Destructure to get the role and token
+
+  //     // Store the token for later use in requests
+  //     localStorage.setItem("token", token);
+  //     // alert(token)
+  //     // alert(email)
+
+  //     // Redirect user based on role
+  //     if (role === "trainer") {
+  //       alert('Login Successfully!')
+  //       navigate(`/trainer-dashboard/${email}`);
+  //     } else if (role === "company") {
+  //       navigate(`/business-dashboard/${email}`);
+  //     } else if (role === "admin") {
+  //       navigate("/admin-dashboard");
+  //     }
+  //   } catch (error) {
+  //     setErrorMsg("Invalid email or password");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+ 
     try {
-      const response = await axios.post("http://localhost:3001/login", {
-        email,
-        password,
+      const response = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
-
-      const { role, token, } = response.data; // Destructure to get the role and token
-
-      // Store the token for later use in requests
-      localStorage.setItem("token", token);
-      // alert(token)
-      // alert(email)
-
-      // Redirect user based on role
-      if (role === "trainer") {
-        alert('Login Successfully!')
-        navigate(`/trainer-dashboard/${email}`);
-      } else if (role === "company") {
-        navigate(`/business-dashboard/${email}`);
-      } else if (role === "admin") {
-        navigate("/admin-dashboard");
+ 
+      if (response.ok) {
+        const { role, token } = await response.json(); // Parse the JSON response
+ 
+        // Store the token for later use in requests
+        localStorage.setItem("token", token);
+ 
+        // Redirect user based on role
+        if (role === "trainer") {
+          alert('Login Successfully!')
+          navigate(`/trainer-dashboard/${email}`);
+        } else if (role === "company") {
+          navigate(`/business-dashboard/${email}`);
+        } else if (role === "admin") {
+          navigate("/admin-dashboard");
+        }
+      } else {
+        throw new Error("Invalid email or password");
       }
     } catch (error) {
       setErrorMsg("Invalid email or password");
