@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import axios from "axios";
 import Navbar from "../../components/Navbar";
-//import TrainerRegisterForm from "../../test/TrainerRegisterForm";
  
 const TrainerRegister = () => {
   const [formData, setFormData] = useState({
@@ -20,22 +18,7 @@ const TrainerRegister = () => {
  
   const navigate = useNavigate();
  
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     const validationErrors = validateForm(formData);
-  //     if (Object.keys(validationErrors).length === 0) {
-  //       await axios.post("http://localhost:3001/trainers", formData);
-  //       alert("Registered Successfully!!!");
-  //       console.log("Trainer registered successfully");
-  //       navigate("/sign-in"); // Adjust the route as necessary
-  //     } else {
-  //       setErrors(validationErrors);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error registering trainer:", error);
-  //   }
-  // };
+
  
   const handleSubmit = async (event) => {
     event.preventDefault();

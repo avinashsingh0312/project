@@ -1,27 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import MyProfile from '../../pages/trainer/MyProfile';
+import MyProfile from '../../pages/business/MyProfile';
  
 // Mock the fetch function to simulate API calls
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve({
-      username: 'avinashsingh09',
-      Name: 'Avinash Singh',
-      Email: 'avinash123@gmail.com',
-      Contact:8080888958,
-      skills: 'Java , Reactjs , Nodejs, MongoDB',
-      city:'Navi Mumbai',
-      ChargePerDay:200,
-      TrainerType:'full-time',
-      OpenToTravel:"Yes",
-      DeliveryMode:"Offline",
-      Clients:"",
-      Resume:"",
-      LinkedInUrl:""
- 
- 
+      _id: 'someUserId',
+      CompanyName: 'Delloite',
+      Location: 'Patna',
+      Phone: '9876548210',
+      Email: 'dell@gmail.com',
+      Domain: 'dell.com',
       // Include other fields as needed
       // ...
     }),
@@ -60,13 +51,6 @@ describe('MyProfile component', () => {
     });
   });
  
-  test('updates TrainerName field in edit mode', async () => {
-    render(<MyProfile email={mockEmail} />);
-   
-    const editButton = screen.getByText('Edit');
-    fireEvent.click(editButton);
-   
-  });
  
   // Add similar test cases for other fields
  
@@ -84,6 +68,7 @@ describe('MyProfile component', () => {
     });
   });
  
+  // Add more test cases for other fields and behaviors
  
   // Cleanup after each test
   afterEach(() => {

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import { useNavigate } from "react-router-dom";
 import BusinessRequestModal from "./BusinessRequestModal";
 import TrainersFilterPage from "./TrainersFilterPage";
 

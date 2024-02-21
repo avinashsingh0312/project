@@ -39,9 +39,9 @@ const MyProfile = ({ email }) => {
         },
         body: JSON.stringify(userData),
       });
-
+ 
       swal("Done!", "Successfully Updated!", "success");
-
+ 
       if (response.ok) {
         setIsEditing(false);
       } else {
@@ -57,7 +57,7 @@ const MyProfile = ({ email }) => {
   };
  
   // Define the schema fields to exclude from rendering
-  const excludedFields = ['_id', 'password', '__v', 'role'];
+  const excludedFields = ['_id', 'password', '__v', 'role', 'uniqueId'];
  
   return (
     <div className="container mx-auto mt-8">
@@ -106,7 +106,7 @@ const MyProfile = ({ email }) => {
             </div>
           );
         })}
-
+ 
  
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -126,7 +126,6 @@ const MyProfile = ({ email }) => {
       </div>
     </div>
   );
-}; 
+};
  
 export default MyProfile;
-

@@ -344,20 +344,52 @@ const getTrainingCount = async (req, res) => {
 // Current trainngs dashboard
 const getCurrentTrainings = async (req, res) => {
   const trainerEmail = req.params.trainerEmail;
-
+ 
   try {
     const currentDate = new Date(); // Get the current date
-    const currentTrainings = await PurchaseOrder.find({
-      trainerEmail,
-      startDate: { $lte: currentDate }, // Start date should be less than or equal to current date
-      endDate: { $gte: currentDate }, // End date should be greater than or equal to current date
-    });
+    const currentTrainings = await PurchaseOrder.aggregate([
+      {
+        $match: {
+          trainerEmail,
+          startDate: { $lte: currentDate }, // Start date should be less than or equal to current date
+          endDate: { $gte: currentDate }, // End date should be greater than or equal to current date
+          status: true,
+        }
+      },
+      {
+        $lookup: {
+          from: 'businessrequests', // Name of the collection to perform the lookup
+          localField: 'businessRequestId',
+          foreignField: '_id',
+          as: 'businessRequest'
+        }
+      },
+      {
+        $unwind: '$businessRequest' // Unwind the array created by lookup
+      },
+      {
+        $lookup: {
+          from: 'companies', // Name of the collection to perform the lookup
+          localField: 'businessRequest.uniqueId',
+          foreignField: '_id',
+          as: 'company'
+        }
+      },
+      {
+        $unwind: '$company' // Unwind the array created by lookup
+      }
+    ]);
+ 
     res.json({ currentTrainings });
   } catch (error) {
-    console.error("Error retrieving current trainings:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error retrieving current trainings:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+
+
 module.exports = {
   registerTrainer,
   getAllTrainers,
