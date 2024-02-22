@@ -9,7 +9,7 @@ const CurrentTrainings = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/finalinvoices/${businessEmail}`);
+        const response = await fetch(`http://localhost:3001/businessinvoices/${businessEmail}`);
         if (!response.ok) {
           throw new Error(`Error fetching invoices: ${response.statusText}`);
         }
