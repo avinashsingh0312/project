@@ -169,7 +169,7 @@ function TrainerDashboard() {
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
           {selectedLink === 'deleteAccount' ? (
-            isAuthorized &&
+            isAuthorized&&
             <div>
               <p>Are you sure you want to delete your account?</p>
               <button

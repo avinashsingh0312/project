@@ -10,12 +10,21 @@ import CurrentTrainings from './CurrentTrainings';
 import Invoices from './Invoices';
 import FeedbackForm from './FeedbackForm';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
  
  
 function BusinessDashboard() {
   const [email, setEmail] = useState(null);
   const [selectedLink, setSelectedLink] = useState('dashboard');
   const navigate= useNavigate();
+  const location = useLocation();
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [userData, setUserData] = useState({});
+
+ 
+
  
   useEffect(() => {
     // Parse the email from the URL
@@ -26,6 +35,34 @@ function BusinessDashboard() {
     setEmail(extractedEmail + 'gmail.com'); // Append @gmail.com
   }, []);
  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setLoggedInUserEmail(decodedToken.email);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const emailParam = location.pathname.split('/')[2]; // Extract email from URL path
+        setIsAuthorized(emailParam === loggedInUserEmail);
+        const response = await fetch(`http://localhost:3001/trainers/${emailParam}`);
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    if (loggedInUserEmail) {
+      fetchData();
+    }
+  }, [loggedInUserEmail, location.pathname]);
+
+
+
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch(`http://localhost:3001/companies/${email}`, {
@@ -48,17 +85,17 @@ function BusinessDashboard() {
   const renderComponent = () => {
     switch (selectedLink) {
       case 'dashboard':
-        return <DashboardHome email={email} />;
+        return isAuthorized? <DashboardHome email={email} />: null;
       case 'my-profile':
-        return <MyProfile email={email} />;
+        return isAuthorized? <MyProfile email={email} /> : null;
       case 'trainer-request':
-        return <BusinessRequestForm email={email} />;
+        return isAuthorized? <BusinessRequestForm email={email} />: null;
       case 'current-trainings':
-        return <CurrentTrainings email={email} />;
+        return isAuthorized? <CurrentTrainings email={email} /> : null;
       case 'invoices':
-        return <Invoices email={email} />;
+        return isAuthorized? <Invoices email={email} /> : null;
       case 'feedback':
-        return <FeedbackForm email={email} />;
+        return isAuthorized? <FeedbackForm email={email} /> : null;
       default:
         return null;
     }
@@ -153,6 +190,7 @@ function BusinessDashboard() {
  
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
         {selectedLink === 'deleteAccount' ? (
+          isAuthorized &&
           <div>
             <p>Are you sure you want to delete your account?</p>
             <button

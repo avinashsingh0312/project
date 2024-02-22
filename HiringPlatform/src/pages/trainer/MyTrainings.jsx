@@ -232,7 +232,7 @@ const [filter, setFilter] = useState('all'); // 'all', 'current', 'past'
         <div>
           {filterTrainings().map(training => (
             <div key={training._id} className="border shadow-md p-4 rounded-md mb-4">
-              <div className="text-lg font-semibold mb-2">Business ID: {training.businessId}</div>
+              <div className="text-lg font-semibold mb-2">Business ID: {training.businessRequestId}</div>
               <div>Trainer Email: {training.trainerEmail}</div>
               <div>Amount: ${training.amount}</div>
               <div>Status: {training.status ? 'Accepted' : 'Not Accepted'}</div>
