@@ -8,9 +8,6 @@ import MyTrainings from './MyTrainings';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-
-
-
 function TrainerDashboard() {
   const location = useLocation();
   const [userData, setUserData] = useState({});
@@ -172,6 +169,7 @@ function TrainerDashboard() {
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
           {selectedLink === 'deleteAccount' ? (
+            isAuthorized &&
             <div>
               <p>Are you sure you want to delete your account?</p>
               <button
