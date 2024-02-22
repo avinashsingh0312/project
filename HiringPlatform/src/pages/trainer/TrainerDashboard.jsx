@@ -6,13 +6,20 @@ import MyProfile from './MyProfile';
 import PODetails from './PODetails';
 import MyTrainings from './MyTrainings';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 
 
 function TrainerDashboard() {
+  const location = useLocation();
+  const [userData, setUserData] = useState({});
+  const [loggedInUserEmail, setLoggedInUserEmail] = useState('');
   const [email, setEmail] = useState(null);
   const [selectedLink, setSelectedLink] = useState('dashboard');
   const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
 
 
   useEffect(() => {
@@ -24,7 +31,31 @@ function TrainerDashboard() {
     setEmail(extractedEmail + 'gmail.com'); // Append @gmail.com
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setLoggedInUserEmail(decodedToken.email);
+    }
+  }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const emailParam = location.pathname.split('/')[2]; // Extract email from URL path
+        setIsAuthorized(emailParam === loggedInUserEmail);
+        const response = await fetch(`http://localhost:3001/trainers/${emailParam}`);
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    if (loggedInUserEmail) {
+      fetchData();
+    }
+  }, [loggedInUserEmail, location.pathname]);
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch(`http://localhost:3001/trainer/${email}`, {
@@ -49,17 +80,32 @@ function TrainerDashboard() {
   const renderComponent = () => {
     switch (selectedLink) {
       case 'dashboard':
-        return <DashboardHome email={email} setSelectedLink= {setSelectedLink} />;
+        return isAuthorized? <DashboardHome email={email} setSelectedLink= {setSelectedLink} />: null;
       case 'my-trainings':
-        return <MyTrainings email={email} />;
+        return isAuthorized? <MyTrainings email={email} />: null;
       case 'po-details':
-        return <PODetails email={email} />;
+        return isAuthorized? <PODetails email={email} />: null;
       case 'my-profile':
-        return <MyProfile email={email} />;
+        return isAuthorized? <MyProfile email={email} />: null;
       default:
         return null;
     }
   };
+
+  // const renderComponent = () => {
+  //   switch (selectedLink) {
+  //     case 'dashboard':
+  //       return isAuthorized ? <DashboardHome email={email} setSelectedLink= {setSelectedLink} /> : ()=>{alert("Unathorized");
+  //     navigate('/sign-in')
+  //     };
+  //     case 'my-trainings':
+  //       return isAuthorized ? <MyTrainings email={loggedInUserEmail} /> : null;
+  //     case 'my-po':
+  //       return isAuthorized ? <PODetails email={loggedInUserEmail} /> : null;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   return (
     <>
