@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 function PurchaseOrderComponent() {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   useEffect(() => {
     fetchPurchaseOrders();
@@ -20,6 +22,19 @@ function PurchaseOrderComponent() {
     } catch (error) {
       console.error("Error fetching purchase orders:", error);
     }
+  };
+
+  // Logic to calculate index of the last and first items on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPurchaseOrders = purchaseOrders.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  // Function to handle pagination button clicks
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -43,7 +58,7 @@ function PurchaseOrderComponent() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {purchaseOrders.map((purchaseOrder) => (
+              {currentPurchaseOrders.map((purchaseOrder) => (
                 <tr key={purchaseOrder._id} className="bg-white">
                   <td className="py-2 px-3">{purchaseOrder.trainerName}</td>
                   <td className="py-2 px-3">{purchaseOrder.trainerEmail}</td>
@@ -57,6 +72,23 @@ function PurchaseOrderComponent() {
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Pagination */}
+        <div className="mt-4 flex justify-end">
+          <button
+            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={indexOfLastItem >= purchaseOrders.length}
+          >
+            Next
+          </button>
         </div>
       </div>
     </>

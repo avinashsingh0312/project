@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import EditTrainerModal from "./EditTrainerModal"; // Import the modal component
+import EditTrainerModal from "./EditTrainerModal";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 function TrainersDetails() {
   const [trainers, setTrainers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTrainer, setSelectedTrainer] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     fetchTrainers();
@@ -25,11 +28,23 @@ function TrainersDetails() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3001/admintrainers/${id}`, {
-        method: "DELETE",
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
       });
-      setTrainers(trainers.filter((trainer) => trainer._id !== id));
-      console.log("Trainer deleted successfully:", id);
+      if (result.isConfirmed) {
+        await fetch(`http://localhost:3001/admintrainers/${id}`, {
+          method: "DELETE",
+        });
+        setTrainers(trainers.filter((trainer) => trainer._id !== id));
+        Swal.fire("Deleted!", "Your trainer has been deleted.", "success");
+        console.log("Trainer deleted successfully:", id);
+      }
     } catch (error) {
       console.error("Error deleting trainer:", error);
     }
@@ -44,12 +59,17 @@ function TrainersDetails() {
     setIsModalOpen(false);
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTrainers = trainers.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <>
       <div className="container mx-auto px-2 py-4">
         <h2 className="text-2xl font-bold mb-4 text-black">Trainers Details</h2>
         <div className="overflow-x-auto">
           <table className="w-full shadow-lg rounded-lg overflow-hidden">
+            {/* Table Header */}
             <thead className="bg-gray-400 text-black">
               <tr>
                 <th className="py-2 px-3 text-left">Username</th>
@@ -61,8 +81,9 @@ function TrainersDetails() {
                 <th className="py-2 px-3 text-left">Actions</th>
               </tr>
             </thead>
+            {/* Table Body */}
             <tbody className="divide-y divide-gray-200">
-              {trainers.map((trainer) => (
+              {currentTrainers.map((trainer) => (
                 <tr key={trainer._id} className="bg-white">
                   <td className="py-2 px-3">{trainer.username}</td>
                   <td className="py-2 px-3">{trainer.name}</td>
@@ -89,14 +110,31 @@ function TrainersDetails() {
             </tbody>
           </table>
         </div>
-        {/* Edit Trainer Modal */}
-        <EditTrainerModal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
-          trainer={selectedTrainer}
-          fetchTrainers={fetchTrainers}
-        />
+        {/* Pagination */}
+        <div className="mt-4 flex justify-end">
+          <button
+            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={indexOfLastItem >= trainers.length}
+          >
+            Next
+          </button>
+        </div>
       </div>
+      {/* Edit Trainer Modal */}
+      <EditTrainerModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        trainer={selectedTrainer}
+        fetchTrainers={fetchTrainers}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from "sweetalert2";
 
 function BusinessRequestModal({ isOpen, onClose, request }) {
   const [email, setEmail] = useState("");
@@ -45,9 +46,14 @@ function BusinessRequestModal({ isOpen, onClose, request }) {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+      Swal.fire({
+        icon: "success",
+        title: "Request Accepted",
+        text: "Business request has been accepted successfully!",
+      });
       const responseData = await response.json();
       console.log("Purchase order created:", responseData);
+
       onClose();
     } catch (error) {
       console.error("Error creating purchase order:", error);
