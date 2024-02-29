@@ -9,27 +9,27 @@ const TrainerInvoice = require("../models/trainerInvoiceModel");
 const registerTrainer = async (req, res) => {
   try {
     const {
-      username,
+      // username,
       password,
       name,
       email,
       contactNumber,
-      skills,
-      city,
-      chargePerDay,
+      // skills,
+      // city,
+      // chargePerDay,
     } = req.body;
  
     const hashedPassword = await bcrypt.hash(password, 10);
  
     const newTrainer = new Trainer({
-      username,
+      // username,
       password: hashedPassword,
       name,
       email,
       contactNumber,
-      skills,
-      city,
-      chargePerDay,
+      // skills,
+      // city,
+      // chargePerDay,
     });
  
     await newTrainer.save();
@@ -69,53 +69,264 @@ const getTrainerByEmail = async (req, res) => {
 };
 
 // Update trainer by email endpoint
+// const updateTrainerByEmail = async (req, res) => {
+//   const { email: updatedEmail } = req.params; // Rename 'email' to 'updatedEmail'
+ 
+//   try {
+//     // Find the trainer by email
+//     let trainer = await Trainer.findOne({ email: updatedEmail });
+//     if (!trainer) {
+//       return res.status(404).json({ message: "Trainer not found" });
+//     }
+ 
+//     // Update trainer fields
+//     const {
+//       // password,
+//       name,
+//       // email,
+//       contactNumber,
+//       skills,
+//       city,
+//       // chargePerDay,
+//       trainerType,
+//       openToTravel,
+//       deliveryMode,
+//       clients,
+//       Resume,
+//       linkedInUrl
+//     } = req.body;
+ 
+//     if (password) {
+//       trainer.password = password;
+//     }
+//     if (name) {
+//       trainer.name = name;
+//     }
+//     if (email) {
+//       trainer.email = email;
+//     }
+//     if (contactNumber) {
+//       trainer.contactNumber = contactNumber;
+//     }
+//     if (skills) {
+//       trainer.skills = skills;
+//     }
+//     if (city) {
+//       trainer.city = city;
+//     }
+//     if (chargePerDay) {
+//       trainer.chargePerDay = chargePerDay;
+//     }
+//     if (trainerType !== undefined) {
+//       trainer.trainerType = trainerType;
+//     }
+//     if (openToTravel !== undefined) {
+//       trainer.openToTravel = openToTravel;
+//     }
+//     if (deliveryMode !== undefined) {
+//       trainer.deliveryMode = deliveryMode;
+//     }
+//     if (clients) {
+//       trainer.clients = clients;
+//     }
+//     if (Resume) {
+//       trainer.Resume = Resume;
+//     }
+//     if (linkedInUrl) {
+//       trainer.linkedInUrl = linkedInUrl;
+//     }
+ 
+//     // Save the updated trainer
+//     trainer = await trainer.save();
+ 
+//     res.status(200).json({ message: "Trainer updated successfully", trainer });
+//   } catch (error) {
+//     console.error("Error updating trainer:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+// const updateTrainerByEmail = async (req, res) => {
+//   const { email: updatedEmail } = req.params; // Rename 'email' to 'updatedEmail'
+
+//   try {
+//     // Find the trainer by email
+//     let trainer = await Trainer.findOne({ email: updatedEmail });
+//     if (!trainer) {
+//       return res.status(404).json({ message: "Trainer not found" });
+//     }
+
+//     // Update trainer fields
+//     const {
+//       // password,
+//       name,
+//       contactNumber,
+//       city,
+//       // chargePerDay,
+//       trainerType,
+//       openToTravel,
+//       deliveryMode,
+//       clients,
+//       Resume,
+//       linkedInUrl,
+//       skill,
+//       price
+//     } = req.body;
+
+   
+//     if (name) {
+//       trainer.name = name;
+//     }
+//     if (contactNumber) {
+//       trainer.contactNumber = contactNumber;
+//     }
+//     if (city) {
+//       trainer.city = city;
+//     }
+   
+//     if (trainerType !== undefined) {
+//       trainer.trainerType = trainerType;
+//     }
+//     if (openToTravel !== undefined) {
+//       trainer.openToTravel = openToTravel;
+//     }
+//     if (deliveryMode !== undefined) {
+//       trainer.deliveryMode = deliveryMode;
+//     }
+//     if (clients) {
+//       trainer.clients = clients;
+//     }
+//     if (Resume) {
+//       trainer.Resume = Resume;
+//     }
+//     if (linkedInUrl) {
+//       trainer.linkedInUrl = linkedInUrl;
+//     }
+//     if (skill && price) {
+//       // Ensure skills field exists and is an object
+//       trainer.skills = trainer.skills || {};
+//       // Add or update the skill with the provided price
+//       trainer.skills[skill] = price;
+//     }
+
+//     // Save the updated trainer
+//     trainer = await trainer.save();
+
+//     res.status(200).json({ message: "Trainer updated successfully", trainer });
+//   } catch (error) {
+//     console.error("Error updating trainer:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+// const updateTrainerByEmail = async (req, res) => {
+//   const { email: updatedEmail } = req.params; // Rename 'email' to 'updatedEmail'
+//    console.log(req.body)
+//   try {
+//     // Find the trainer by email
+//     let trainer = await Trainer.findOne({ email: updatedEmail });
+//     if (!trainer) {
+//       return res.status(404).json({ message: "Trainer not found" });
+//     }
+
+//     // Update trainer fields
+//     const {
+//       // password,
+//       name,
+//       contactNumber,
+//       city,
+//       // chargePerDay,
+//       trainerType,
+//       openToTravel,
+//       deliveryMode,
+//       clients,
+//       Resume,
+//       linkedInUrl,
+//       skills // Update to properly access skills from the request body
+//     } = req.body;
+
+
+
+//     if (name) {
+//       trainer.name = name;
+//     }
+//     if (contactNumber) {
+//       trainer.contactNumber = contactNumber;
+//     }
+//     if (city) {
+//       trainer.city = city;
+//     }
+//     if (trainerType !== undefined) {
+//       trainer.trainerType = trainerType;
+//     }
+//     if (openToTravel !== undefined) {
+//       trainer.openToTravel = openToTravel;
+//     }
+//     if (deliveryMode !== undefined) {
+//       trainer.deliveryMode = deliveryMode;
+//     }
+//     if (clients) {
+//       trainer.clients = clients;
+//     }
+//     if (Resume) {
+//       trainer.Resume = Resume;
+//     }
+//     if (linkedInUrl) {
+//       trainer.linkedInUrl = linkedInUrl;
+//     }
+  
+// console.log(skills)
+
+//     if (skills) {
+//       // Ensure skills field exists and is an object
+//       trainer.skills = trainer.skills || {};
+//       // Iterate over the skills object in the request body and update the trainer's skills
+//       Object.entries(skills).forEach(([skill, price]) => {
+//         trainer.skills[skill] = price;
+//       });
+//     }
+//     // Save the updated trainer
+//     trainer = await trainer.save();
+
+//     res.status(200).json({ message: "Trainer updated successfully", trainer });
+//   } catch (error) {
+//     console.error("Error updating trainer:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 const updateTrainerByEmail = async (req, res) => {
   const { email: updatedEmail } = req.params; // Rename 'email' to 'updatedEmail'
- 
+
   try {
     // Find the trainer by email
     let trainer = await Trainer.findOne({ email: updatedEmail });
     if (!trainer) {
       return res.status(404).json({ message: "Trainer not found" });
     }
- 
+
     // Update trainer fields
     const {
-      password,
       name,
-      email,
       contactNumber,
-      skills,
       city,
-      chargePerDay,
       trainerType,
       openToTravel,
       deliveryMode,
       clients,
       Resume,
-      linkedInUrl
+      linkedInUrl,
+      skills // Extract skills from req.body
     } = req.body;
- 
-    if (password) {
-      trainer.password = password;
-    }
+  
     if (name) {
       trainer.name = name;
-    }
-    if (email) {
-      trainer.email = email;
     }
     if (contactNumber) {
       trainer.contactNumber = contactNumber;
     }
-    if (skills) {
-      trainer.skills = skills;
-    }
     if (city) {
       trainer.city = city;
-    }
-    if (chargePerDay) {
-      trainer.chargePerDay = chargePerDay;
     }
     if (trainerType !== undefined) {
       trainer.trainerType = trainerType;
@@ -135,16 +346,28 @@ const updateTrainerByEmail = async (req, res) => {
     if (linkedInUrl) {
       trainer.linkedInUrl = linkedInUrl;
     }
- 
+  
+    // Update the skills
+    // if (skills) {
+    //   trainer.skills = { ...trainer.skills, ...skills }; // Merge existing skills with new ones
+    // }
+
+    if (skills) {
+      trainer.skills = skills;
+    }
+
     // Save the updated trainer
     trainer = await trainer.save();
- 
+
     res.status(200).json({ message: "Trainer updated successfully", trainer });
   } catch (error) {
     console.error("Error updating trainer:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
 
 //get all the details of PO for a particular trainer id
 const  getPoByEmail = async(req,res) =>{
@@ -254,6 +477,46 @@ const raiseInvoiceByPoId = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while raising the invoice." });
+  }
+};
+
+//check the PO of training before deleting the account
+const checkTrainings = async (req, res) => {
+  try {
+    const email = req.params.email;
+ 
+    // Query purchase orders to check for ongoing or upcoming trainings
+    const currentDate = new Date();
+    const hasOngoingOrUpcomingTrainings = await PurchaseOrder.exists({
+      trainerEmail: email,
+      endDate: { $gte: currentDate },
+    });
+ 
+    return res.status(200).json({ hasOngoingOrUpcomingTrainings });
+  } catch (error) {
+    console.error('Error checking trainings:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const requestDeletion = async (req, res) => {
+  try {
+    const email = req.params.email; // Extract email from the request parameters
+    // Find the trainer by their email
+    const trainer = await Trainer.findOne({ email });
+    if (!trainer) {
+      return res.status(404).json({ message: 'Trainer not found' });
+    }
+ 
+    // Update the requestDeletion field to true
+    trainer.requestDeletion = true;
+    await trainer.save();
+ 
+    // Send response
+    return res.status(200).json({ message: 'Request for deletion sent to admin' });
+  } catch (error) {
+    console.error('Error requesting deletion:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -406,4 +669,6 @@ module.exports = {
   getCountPoByEmail,
   getTrainingCount,
   getCurrentTrainings,
+  checkTrainings,
+  requestDeletion,
 };

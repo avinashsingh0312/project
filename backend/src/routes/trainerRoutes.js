@@ -17,6 +17,8 @@ const {
   getCountPoByEmail,
   getTrainingCount,
   getCurrentTrainings,
+  checkTrainings,
+  requestDeletion
 } = require("../controllers/trainerController");
 
 // router.post("/trainers", registerTrainer);
@@ -110,5 +112,12 @@ router.get("/total-trainers/:trainerEmail", getTrainingCount);
 
 // Get current trainings for a trainer endpoint
 router.get("/current-trainings/:trainerEmail", getCurrentTrainings);
+
+// Delete a trainer account endpoint
+// router.delete("/trainer/:email", deleteByEmail);
+router.post("/trainer/requestDeletion/:email", requestDeletion);
+
+//check PO before validating
+router.get('/trainer/checkTrainings/:email', checkTrainings);
 
 module.exports = router;

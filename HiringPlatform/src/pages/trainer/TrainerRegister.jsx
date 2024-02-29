@@ -4,14 +4,16 @@ import Navbar from "../../components/Navbar";
  
 const TrainerRegister = () => {
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    // username: "",
     name: "",
+    
     email: "",
+    password: "",
+   
     contactNumber: "",
-    skills: "",
+    // skills: "",
     city: "",
-    chargePerDay: "",
+    // chargePerDay: "",
   });
  
   const [errors, setErrors] = useState({});
