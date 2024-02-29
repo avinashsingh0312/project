@@ -24,7 +24,6 @@ function PurchaseOrderComponent() {
     }
   };
 
-  // Logic to calculate index of the last and first items on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentPurchaseOrders = purchaseOrders.slice(
@@ -32,7 +31,6 @@ function PurchaseOrderComponent() {
     indexOfLastItem
   );
 
-  // Function to handle pagination button clicks
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -73,17 +71,16 @@ function PurchaseOrderComponent() {
             </tbody>
           </table>
         </div>
-        {/* Pagination */}
         <div className="mt-4 flex justify-end">
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
           >
             Previous
           </button>
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => paginate(currentPage + 1)}
             disabled={indexOfLastItem >= purchaseOrders.length}
           >

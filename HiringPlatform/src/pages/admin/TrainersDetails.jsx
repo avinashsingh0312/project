@@ -94,13 +94,13 @@ function TrainersDetails() {
                   <td className="py-2 px-3">
                     <button
                       onClick={() => handleEdit(trainer)}
-                      className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded mr-1"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(trainer._id)}
-                      className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-2 rounded mr-1"
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-5 rounded"
                     >
                       Delete
                     </button>
@@ -113,14 +113,14 @@ function TrainersDetails() {
         {/* Pagination */}
         <div className="mt-4 flex justify-end">
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
             Previous
           </button>
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={indexOfLastItem >= trainers.length}
           >

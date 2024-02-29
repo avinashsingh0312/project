@@ -102,13 +102,13 @@ function CompaniesDetails() {
                   <td className="py-2 px-3">{company.domain}</td>
                   <td className="py-2 px-3">
                     <button
-                      className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded mr-1"
-                      onClick={() => handleEdit(company._id)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
+                      onClick={() => handleEdit(company)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-2 rounded"
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-5 rounded"
                       onClick={() => handleDelete(company._id)}
                     >
                       Delete
@@ -122,14 +122,14 @@ function CompaniesDetails() {
         {/* Pagination */}
         <div className="mt-4 flex justify-end">
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
           >
             Previous
           </button>
           <button
-            className="bg-gray-400 hover:bg-gray-600 text-black font-bold py-1 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={indexOfLastItem >= companies.length}
           >
