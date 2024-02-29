@@ -88,4 +88,7 @@ router.get("/adminbusinessrequestsGraph", async (req, res) => {
   await adminController.getBusinessRequestsGraph(req, res);
 });
 
+router.get("/checkPurchaseOrders/:email", async (req, res) => {
+  await adminController.checkPurchaseOrders(req, res);
+});
 module.exports = router;

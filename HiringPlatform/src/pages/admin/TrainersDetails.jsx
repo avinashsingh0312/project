@@ -26,7 +26,7 @@ function TrainersDetails() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, email) => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -38,6 +38,16 @@ function TrainersDetails() {
         confirmButtonText: "Yes, delete it!",
       });
       if (result.isConfirmed) {
+        // Check if trainer has any active purchase orders
+        const response = await fetch(
+          `http://localhost:3001/checkPurchaseOrders/${email}`
+        );
+        const { hasActiveOrders } = await response.json();
+        if (hasActiveOrders) {
+          Swal.fire("Error", "Trainer has active purchase orders!", "error");
+          return;
+        }
+
         await fetch(`http://localhost:3001/admintrainers/${id}`, {
           method: "DELETE",
         });
@@ -99,7 +109,7 @@ function TrainersDetails() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(trainer._id)}
+                      onClick={() => handleDelete(trainer._id, trainer.email)}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-5 rounded"
                     >
                       Delete

@@ -115,13 +115,13 @@ function BusinessRequestModal({ isOpen, onClose, request }) {
         {/* Submit and Cancel buttons */}
         <div className="flex justify-end space-x-2">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-7 my-2 rounded mr-4"
             onClick={handleSubmit}
           >
             Submit
           </button>
           <button
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-5 rounded"
             onClick={onClose}
           >
             Cancel

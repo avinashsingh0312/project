@@ -57,12 +57,34 @@ const updateTrainer = async (req, res) => {
 const deleteTrainer = async (req, res) => {
   const { id } = req.params;
   try {
+    const trainer = await Trainer.findById(id);
+    if (!trainer) {
+      return res.status(404).json({ message: "Trainer not found" });
+    }
+
+    // Check if the trainer has any active purchase orders
+    const activePurchaseOrders = await PurchaseOrder.find({
+      trainerEmail: trainer.email,
+      endDate: { $gte: new Date() }, // End date is in the future
+      startDate: { $lte: new Date() }, // Start date is in the past
+    });
+
+    if (activePurchaseOrders.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Trainer has active purchase orders" });
+    }
+
     await Trainer.findByIdAndDelete(id);
     res.status(200).json({ message: "Trainer deleted successfully" });
   } catch (error) {
     console.error("Error deleting trainer:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+
+module.exports = {
+  deleteTrainer,
 };
 
 const updateCompany = async (req, res) => {
@@ -107,14 +129,13 @@ const deleteCompany = async (req, res) => {
 //         },
 //       },
 //     ]);
- 
+
 //     res.json(data);
 //   } catch (error) {
 //     console.error("Error fetching data:", error);
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // };
-
 
 const getBusinessRequests = async (req, res) => {
   try {
@@ -146,7 +167,7 @@ const getBusinessRequests = async (req, res) => {
         },
       },
     ]);
- 
+
     res.json(data);
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -363,6 +384,23 @@ const getBusinessRequestsGraph = async (req, res) => {
   }
 };
 
+const checkPurchaseOrders = async (req, res) => {
+  const { email } = req.params;
+  try {
+    // Check if there are any active purchase orders for the given email
+    const activePurchaseOrders = await PurchaseOrder.find({
+      trainerEmail: email,
+      endDate: { $gte: new Date() }, // End date is in the future
+      startDate: { $lte: new Date() }, // Start date is in the past
+    });
+
+    res.status(200).json({ hasActiveOrders: activePurchaseOrders.length > 0 });
+  } catch (error) {
+    console.error("Error checking purchase orders:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAdminDashboard,
   getTrainerDashboard,
@@ -382,4 +420,5 @@ module.exports = {
   createBusinessInvoice,
   getTechnologySell,
   getBusinessRequestsGraph,
+  checkPurchaseOrders,
 };
